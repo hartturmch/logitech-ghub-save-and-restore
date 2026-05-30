@@ -345,6 +345,12 @@ function Get-TimeStamp {
     Get-Date -Format 'yyyy-MM-dd_HH-mm-ss'
 }
 
+function Test-IsAdministrator {
+    $identity = [Security.Principal.WindowsIdentity]::GetCurrent()
+    $principal = New-Object Security.Principal.WindowsPrincipal($identity)
+    return $principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
+}
+
 function New-Directory {
     param([Parameter(Mandatory)][string]$Path)
 
@@ -529,7 +535,11 @@ function Stop-GHubIfNeeded {
     $remaining = @(Get-GHubProcesses)
     if ($remaining.Count -gt 0) {
         $names = ($remaining | ForEach-Object { '{0}({1})' -f $_.ProcessName, $_.Id }) -join ', '
-        throw "G HUB processes still running: $names. Close G HUB or run PowerShell as Administrator."
+        if (-not (Test-IsAdministrator)) {
+            throw "G HUB processes still running: $names. Run GHubBackupRestore.bat and accept the Windows administrator prompt."
+        }
+
+        throw "G HUB processes still running: $names. Close G HUB manually and try again."
     }
 
     [pscustomobject]@{

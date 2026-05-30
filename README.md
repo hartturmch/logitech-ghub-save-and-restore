@@ -5,8 +5,9 @@ A simple Windows tool to back up and restore Logitech G HUB settings, including 
 ## How to use
 
 1. Double-click `GHubBackupRestore.bat`.
-2. Choose your language.
-3. Use the menu to create a backup, restore a backup, or delete old backups.
+2. Accept the Windows administrator prompt.
+3. Choose your language.
+4. Use the menu to create a backup, restore a backup, or delete old backups.
 
 Backups are created in the same folder as the script using this format:
 
