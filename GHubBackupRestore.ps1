@@ -557,7 +557,14 @@ function Start-GHubIfNeeded {
 
     if ($State.Executable -and (Test-Path -LiteralPath $State.Executable)) {
         Write-Step (Get-UiText -Key 'StartingGHub')
-        Start-Process -FilePath $State.Executable | Out-Null
+
+        $explorerPath = Join-Path $env:WINDIR 'explorer.exe'
+        if (Test-Path -LiteralPath $explorerPath) {
+            Start-Process -FilePath $explorerPath -ArgumentList ('"{0}"' -f $State.Executable) | Out-Null
+        }
+        else {
+            Start-Process -FilePath $State.Executable | Out-Null
+        }
     }
     else {
         Write-Warn 'G HUB was running, but lghub.exe was not found for restart.'
